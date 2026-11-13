@@ -1,0 +1,98 @@
+@startuml  Diagramme de classes pour la gestion de vols d'une agence de voyages
+title Gestion d'une agence de voyages
+
+skinparam classAttributeIconSize 0
+
+class Passager {
+    - id : int
+    - nom : string
+    - prenom : string
+    - email : string
+    - telephone : string
+    + getId() : int
+    + afficher() : void
+}
+
+class Vol {
+    - id : int
+    - numero : string
+    - depart : string
+    - destination : string
+    - date : string
+    - capacite : int
+    - placesReservees : int
+    - prix : double
+    + getId() : int
+    + getPrix() : double
+    + estDisponible() : bool
+    + reserverPlace() : bool
+    + libererPlace() : void
+    + afficher() : void
+}
+
+enum EtatReservation {
+    EN_ATTENTE
+    VALIDEE
+    ANNULEE
+}
+
+class Reservation {
+    - id : int
+    - idPassager : int
+    - idVol : int
+    - dateCreation : string
+    - etat : EtatReservation
+    + getId() : int
+    + getEtat() : EtatReservation
+    + setEtat() : void
+    + afficher() : void
+}
+
+enum EtatPaiement {
+    PAYE
+    REMBOURSE_EN_ATTENTE
+    REMBOURSE
+}
+
+class Paiement {
+    - id : int
+    - idReservation : int
+    - montant : double
+    - etat : EtatPaiement
+    + demanderRemboursement() : void
+    + confirmerRemboursement() : void
+    + afficher() : void
+}
+
+class AgenceVoyage {
+    - passagers : vector<Passager>
+    - vols : vector<Vol>
+    - reservations : vector<Reservation>
+    - paiements : vector<Paiement>
+    + enregistrerPassager() : void
+    + ajouterVol() : void
+    + afficherVols() : void
+    + rechercherVol() : void
+    + effectuerReservation() : void
+    + validerReservation() : void
+    + enregistrerPaiement() : void
+    + annulerReservation() : void
+    + consulterReservations() : void
+    + informationsPassager() : void
+    + traiterRemboursement() : void
+    + consulterPaiements() : void
+}
+
+AgenceVoyage "1" o-- "0..*" Passager
+AgenceVoyage "1" o-- "0..*" Vol
+AgenceVoyage "1" o-- "0..*" Reservation
+AgenceVoyage "1" o-- "0..*" Paiement
+
+Passager "1" -- "0..*" Reservation
+Vol "1" -- "0..*" Reservation
+Reservation "1" -- "0..1" Paiement
+
+Reservation --> EtatReservation
+Paiement --> EtatPaiement
+
+@enduml
